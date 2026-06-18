@@ -1,0 +1,93 @@
+[
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/company_group",
+				"___rel": "self"
+			}
+		],
+		"title": "グループ採番"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/invoice",
+				"___rel": "self"
+			}
+		],
+		"title": "請求書"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/quotation",
+				"___rel": "self"
+			}
+		],
+		"title": "見積書"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/purchase_order",
+				"___rel": "self"
+			}
+		],
+		"title": "注文書"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/pdf",
+				"___rel": "self"
+			}
+		],
+		"title": "PDF"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/pdf/quotation",
+				"___rel": "self"
+			}
+		],
+		"title": "見積書PDF"
+	},
+	{
+		"contributor": [
+			{ "uri": "urn:vte.cx:acl:/_group/$admin,CRUD" },
+			{ "uri": "urn:vte.cx:acl:+,CRUDE" }
+		],
+		"link": [
+			{
+				"___href": "/customer",
+				"___rel": "self"
+			}
+		],
+		"title": "顧客マスタ"
+	}
+]

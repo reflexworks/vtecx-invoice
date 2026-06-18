@@ -1,0 +1,20 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { getMyAccount } from '@/app/(page)/account/(main)/fetcher'
+
+export default function QuotationEditRedirect() {
+  const router = useRouter()
+  const params = useParams()
+  const id = params?.id as string
+  useEffect(() => {
+    getMyAccount().then((res: any) => {
+      const entries = Array.isArray(res) ? res : (res?.feed?.entry ?? [])
+      const entry = entries[0]
+      const uid = entry?.user?.uid ?? entry?.id?.split('/').pop()?.split(',')[0]
+      if (uid && id) router.replace(`/${uid}/quotation/edit/${id}`)
+    }).catch(() => {})
+  }, [id])
+  return null
+}

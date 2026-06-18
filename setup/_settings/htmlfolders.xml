@@ -1,0 +1,120 @@
+<feed>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- /_settingsをログインユーザでサービスのみ（E)に閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:+,RE./</uri>
+        </contributor>
+        <link rel="self" href="/_settings" />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- invoiceをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel="self" href="/invoice" />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- invoiceをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:*,CRUDE./</uri>
+        </contributor>
+        <link rel="self" href="/server" />
+    </entry>
+    <entry>
+        <contributor>
+          <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- /_html/imgを全ユーザに閲覧できるようにするACL設定(*)  -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel='self' href='/_html/img' />
+    </entry>
+    <entry>
+        <contributor>
+          <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- /_htmlを全ユーザに閲覧できるようにするACL設定(*)  -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel='self' href='/_html' />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- quotationをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel="self" href="/quotation" />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- bankをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel="self" href="/bank" />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <!-- /_userをログイン済ユーザが自身のエントリを更新できるようにするACL設定 -->
+            <!-- アプリ側で自分のエントリのみ更新可能に制御する -->
+            <uri>urn:vte.cx:acl:*,CRUD./</uri>
+        </contributor>
+        <link rel="self" href="/_user" />
+    </entry>
+    <entry>
+        <author>
+            <uri>urn:vte.cx:created:0</uri>
+        </author>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$useradmin,CRUD/</uri>
+        </contributor>
+        <contributor>
+            <uri>urn:vte.cx:acl:+,CRUD/</uri>
+        </contributor>
+        <link href="/_group" rel="self"/>
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        
+        <contributor>
+            <!-- company_groupをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:+,CRUD/</uri>
+        </contributor>
+        <link rel="self" href="/company_group" />
+    </entry>
+    <entry>
+        <contributor>
+            <uri>urn:vte.cx:acl:/_group/$admin,CRUD</uri>
+        </contributor>
+        
+        <contributor>
+            <!-- pdf保存フォルダをログイン済ユーザのみ閲覧できるようにするACL設定(+)  -->
+            <uri>urn:vte.cx:acl:+,CRUD/</uri>
+        </contributor>
+        <link rel="self" href="/pdf" />
+    </entry>
+</feed>

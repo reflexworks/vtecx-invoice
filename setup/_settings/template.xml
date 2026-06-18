@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed>
+<entry><content>
+invoice
+ invoice_code
+ customer_name
+ subject
+ issue_date(int)
+ due_date(int)
+ status
+ remarks
+ sub_total(int)
+ tax_amount(int)
+ total_amount(int)
+ issue_date_desc(desc)
+ due_date_desc(desc)
+ total_amount_desc(desc)
+record{}
+ record_code
+ description
+ quantity(int)
+ unit
+ unit_price(int)
+ tax_rate(int)
+bank
+ bank_code
+ bank_title
+ branch_code
+ branch_name
+ bank_type
+ bank_number
+ bank_name
+ bank_label
+ is_default(boolean)
+company
+ email
+ company_code
+ company_name
+ zip_code
+ prefecture
+ city
+ address_line1
+ building_name
+ tel
+ fax
+ registration_number
+user
+ uid
+ user_name
+quotation
+ quotation_code
+ customer_name
+ subject
+ issue_date(int)
+ delivery_date(int)
+ expiry_date(int)
+ payment_terms
+ status
+ remarks
+ sub_total(int)
+ tax_amount(int)
+ total_amount(int)
+ issue_date_desc(desc)
+ total_amount_desc(desc)
+company_group
+ company_id
+ owner_id
+ role
+ status
+ company_name
+purchase_order
+ purchase_order_code
+ customer_name
+ subject
+ issue_date(int)
+ delivery_date(int)
+ delivery_location
+ status
+ remarks
+ sub_total(int)
+ tax_amount(int)
+ total_amount(int)
+ issue_date_desc(desc)
+ total_amount_desc(desc)
+customer
+ customer_code
+ customer_name
+ to_email
+ cc_email
+customer_email{}
+ email
+ label
+</content><link href="/_settings/template" rel="self"></link><rights>
+invoice.issue_date_desc:^/invoice
+invoice.due_date_desc:^/invoice
+invoice.customer_name;^/invoice
+invoice.subject;^/invoice
+invoice.total_amount_desc:^/invoice
+customer.customer_name;^/customer
+</rights></entry>
+<entry>
+  <link href="/_settings/template_property" rel="self"/>
+</entry><entry><link href="/_settings/template_property/bank.bank_label" rel="self"></link><title>ラベル</title></entry><entry><link href="/_settings/template_property/bank.is_default" rel="self"></link><title>デフォルト設定</title></entry><entry><link href="/_settings/template_property/invoice" rel="self"></link><title>請求書</title></entry><entry><link href="/_settings/template_property/invoice.customer_name" rel="self"></link><title>顧客名</title></entry><entry><link href="/_settings/template_property/invoice.due_date" rel="self"></link><title>支払日</title></entry><entry><link href="/_settings/template_property/invoice.due_date_desc" rel="self"></link><title></title></entry><entry><link href="/_settings/template_property/invoice.invoice_code" rel="self"></link><title>請求書番号</title></entry><entry><link href="/_settings/template_property/invoice.issue_date" rel="self"></link><title>発行日</title></entry><entry><link href="/_settings/template_property/invoice.issue_date_desc" rel="self"></link><title></title></entry><entry><link href="/_settings/template_property/invoice.remarks" rel="self"></link><title>備考</title></entry><entry><link href="/_settings/template_property/invoice.status" rel="self"></link><title>ステータス</title></entry><entry><link href="/_settings/template_property/invoice.sub_total" rel="self"></link><title>小計</title></entry><entry><link href="/_settings/template_property/invoice.subject" rel="self"></link><title>件名</title></entry><entry><link href="/_settings/template_property/invoice.tax_amount" rel="self"></link><title>消費税額</title></entry><entry><link href="/_settings/template_property/invoice.total_amount" rel="self"></link><title>合計金額</title></entry><entry><link href="/_settings/template_property/record" rel="self"></link><title>明細</title></entry><entry><link href="/_settings/template_property/record.description" rel="self"></link><title>内容</title></entry><entry><link href="/_settings/template_property/record.quantity" rel="self"></link><title>数量</title></entry><entry><link href="/_settings/template_property/record.record_code" rel="self"></link><title>明細コード</title></entry><entry><link href="/_settings/template_property/record.unit_price" rel="self"></link><title>単価</title></entry></feed>
