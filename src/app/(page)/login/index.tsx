@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { getAuthToken } from '@vtecx/vtecxauth'
 import { Button, FormControl, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { grey } from '@mui/material/colors'
 import { login } from './fetcher'
 import useLoader from '@/hooks/useLoader'
 import { useRouter } from 'next/navigation'
@@ -120,10 +119,8 @@ const Main = () => {
                 ログイン
               </Button>
             </FormControl>
-            <Typography variant="caption" color={grey[500]}>
-              This site is protected by reCAPTCHA and the Google{' '}
-              <a href="https://policies.google.com/privacy">Privacy Policy</a> and{' '}
-              <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+            <Typography variant="caption" color="text.secondary">
+              This site is protected by reCAPTCHA.
             </Typography>
           </Grid>
           <Grid size={{ xs: 12, md: 5 }} textAlign={'center'}>

@@ -14,11 +14,6 @@ body {
   margin: 0;
 }
 
-.recaptcha {
-  color: gray;
-  font-size: smaller;
-}
-
 .grecaptcha-badge {
   visibility: hidden;
 }
