@@ -347,18 +347,6 @@ export default function AccountEdit() {
     }
   }
 
-  const handleFillDebug = () => {
-    setCompany({
-      company_name: 'テスト株式会社',
-      zip_code: '1600022',
-      prefecture: '東京都',
-      city: '新宿区新宿',
-      address_line1: '1-2-3',
-      building_name: 'テストビル 5F',
-      tel: '03-1234-5678'
-    })
-  }
-
   const handleImageDelete = async (type: 'logo' | 'stamp') => {
     const res = await fetch(`/api/upload-image?uid=${encodeURIComponent(uid)}&type=${type}`, {
       method: 'DELETE',
@@ -506,9 +494,6 @@ export default function AccountEdit() {
           </Button>
         )}
         <Box sx={{ ml: 'auto', display: 'flex', gap: 1 }}>
-          <Button variant="outlined" color="secondary" onClick={handleFillDebug}>
-            デバッグ入力
-          </Button>
           <Button
             variant="contained"
             onClick={handleSave}

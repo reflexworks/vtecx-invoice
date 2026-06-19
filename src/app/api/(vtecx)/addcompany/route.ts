@@ -219,7 +219,6 @@ export const POST = async (req: NextRequest): Promise<Response> => {
         "address_line1": "1-2-3",
         "building_name": "テストビル 5F",
         "tel": "03-1234-5678",
-        "email": "morishita+2@virtual-tech.net"
     },
     "bank": {
         "bank_code": "1000",

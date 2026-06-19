@@ -124,23 +124,6 @@ export default function AccountNew() {
     }
   }
 
-  const handleFillDebug = () => {
-    setAuth({
-      email: 'morishita+2@virtual-tech.net',
-      password: 'Test1234!!',
-      rePassword: 'Test1234!!'
-    })
-    setCompany({
-      company_name: 'テスト株式会社',
-      zip_code: '1600022',
-      prefecture: '東京都',
-      city: '新宿区新宿',
-      address_line1: '1-2-3',
-      building_name: 'テストビル 5F',
-      tel: '03-1234-5678'
-    })
-  }
-
   const handleSave = async () => {
     if (!validate()) return
     if (!loaded || !executeRecaptcha) {
@@ -214,9 +197,6 @@ export default function AccountNew() {
           一覧に戻る
         </Button>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button variant="outlined" color="secondary" onClick={handleFillDebug}>
-            デバッグ入力
-          </Button>
           <Button
             variant="contained"
             onClick={handleSave}

@@ -12,12 +12,10 @@ import {
   Paper,
   CircularProgress,
   Chip,
-  Button,
   Snackbar,
   Alert
 } from '@mui/material'
 import GroupsIcon from '@mui/icons-material/Groups'
-import FolderIcon from '@mui/icons-material/Folder'
 import { useRouter } from 'next/navigation'
 import { getGroupList, getMyAccount } from '../fetcher'
 import VtecxApp from '@/typings'
@@ -35,40 +33,11 @@ export default function GroupList() {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [migrating, setMigrating] = useState(false)
   const [snackbar, setSnackbar] = useState<{
     open: boolean
     message: string
     severity: 'success' | 'error'
   }>({ open: false, message: '', severity: 'success' })
-
-  const handleSetupImgFolders = async () => {
-    setMigrating(true)
-    try {
-      const res = await fetch('/api/migrate?action=setup-img-folder-company', {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      const json = await res.json().catch(() => ({}))
-      const title = json?.feed?.title ?? ''
-      if (res.ok) {
-        setSnackbar({
-          open: true,
-          message: title || '画像フォルダを作成しました',
-          severity: 'success'
-        })
-      } else {
-        setSnackbar({
-          open: true,
-          message: title || 'フォルダ作成に失敗しました',
-          severity: 'error'
-        })
-      }
-    } catch (e: any) {
-      setSnackbar({ open: true, message: e?.message ?? 'エラーが発生しました', severity: 'error' })
-    }
-    setMigrating(false)
-  }
 
   useEffect(() => {
     const fetch = async () => {
@@ -122,17 +91,6 @@ export default function GroupList() {
             {isAdmin ? 'グループ管理' : '所属グループ一覧'}
           </Typography>
         </Box>
-        {typeof window !== 'undefined' && window.location.hostname === 'localhost' && (
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<FolderIcon />}
-            onClick={handleSetupImgFolders}
-            disabled={migrating}
-          >
-            {migrating ? '実行中...' : '画像フォルダ初期化'}
-          </Button>
-        )}
       </Box>
 
       {error && (
