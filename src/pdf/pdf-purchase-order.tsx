@@ -694,7 +694,7 @@ export const getHtmlTemplate = async (data: PurchaseOrderEntry, file_name: strin
         ? getFirstPage(data, pageRecords, isLastPage, pageNum, totalPages)
         : getContinuationPage(data, pageRecords, startIndex, isLastPage, pageNum, totalPages)
     startIndex += pageRecords.length
-    return element
+    return <React.Fragment key={`page-${i}`}>{element}</React.Fragment>
   })
 
   const html = (

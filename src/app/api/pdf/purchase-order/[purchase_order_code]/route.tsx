@@ -47,8 +47,10 @@ export const GET = async (req: NextRequest, { params }: DynamicRoutingParam): Pr
     const groupEntry = await vtecxnext.getEntry(`/_group/${targetCompanyCode}`).catch(() => null)
 
     const imgBase = `/_html/img/${targetCompanyCode}`
-    const logoKey = `${imgBase}/logo.png`
-    const stampKey = `${imgBase}/stamp.jpg`
+    const logoExists = await new VtecxNext(req).getcontent(`${imgBase}/logo.png`).catch(() => false)
+    const stampExists = await new VtecxNext(req).getcontent(`${imgBase}/stamp.jpg`).catch(() => false)
+    const logoKey = logoExists ? `${imgBase}/logo.png` : undefined
+    const stampKey = stampExists ? `${imgBase}/stamp.jpg` : undefined
     const groupCompany = groupEntry?.company ?? entry.company ?? {}
 
     const purchaseOrderData = {
@@ -74,15 +76,6 @@ export const GET = async (req: NextRequest, { params }: DynamicRoutingParam): Pr
       stampKey
     }
 
-    // 保存済みPDFがあればそちらを返す
-    const savePath = `/pdf/purchase_order/${targetCompanyCode}/${purchase_order_code}.pdf`
-    const ok = await vtecxnext.getcontent(savePath).catch(() => false)
-    if (ok) {
-      console.log(`[api pdf/purchase-order] served from saved PDF. path=${savePath}`)
-      return vtecxnext.response(status, resJson)
-    }
-
-    // 保存済みPDFがない場合はその場で生成
     const file_name = `${purchase_order_code}.pdf`
     const raw = await getHtmlTemplate(purchaseOrderData, file_name)
     const html = raw.replace(

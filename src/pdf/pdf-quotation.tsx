@@ -703,7 +703,7 @@ export const getHtmlTemplate = async (data: QuotationEntry, file_name: string): 
         ? getFirstPage(data, pageRecords, isLastPage, pageNum, totalPages)
         : getContinuationPage(data, pageRecords, startIndex, isLastPage, pageNum, totalPages)
     startIndex += pageRecords.length
-    return element
+    return <React.Fragment key={`page-${i}`}>{element}</React.Fragment>
   })
 
   const html = (
