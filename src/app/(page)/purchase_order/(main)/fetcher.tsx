@@ -81,7 +81,7 @@ const usePurchaseOrder = ({ companyId }: { companyId?: string }) => {
       a.href = url
       a.download = `${purchase_order_code}.pdf`
       a.click()
-      URL.revokeObjectURL(url)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch (err: any) {
       return browserutil.handleError(err)
     }
