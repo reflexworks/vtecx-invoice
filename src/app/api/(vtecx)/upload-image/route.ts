@@ -86,6 +86,10 @@ export const DELETE = async (req: NextRequest): Promise<Response> => {
 export const PUT = async (req: NextRequest): Promise<Response> => {
   console.log(`[api upload-image put] start.`)
   try {
+    // ボディを先に読み取る
+    const bodyBuffer = await req.arrayBuffer()
+
+    // req なしの VtecxNext でパラメータ取得・認証チェック用のインスタンス
     const vtecxnext = new VtecxNext(req)
     const xresult = vtecxnext.checkXRequestedWith()
     if (xresult) return xresult
@@ -101,11 +105,24 @@ export const PUT = async (req: NextRequest): Promise<Response> => {
     const imgPath = `/_html/img/${companyId}/${type}.${typeToExt[type] ?? 'png'}`
     console.log(`[api upload-image put] imgPath=${imgPath}`)
 
-    // 親フォルダが存在しない場合に備えて作成しておく
-    await vtecxnext.putcontent(imgDir, undefined, new ArrayBuffer(0))
+    const contentType = req.headers.get('content-type') ?? 'application/octet-stream'
+
+    // 親フォルダ作成用（空ボディ、クッキーなし）
+    const reqForFolder = new Request(req.url, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/octet-stream' },
+      body: new ArrayBuffer(0),
+    }) as any
+    await new VtecxNext(reqForFolder).putcontent(imgDir)
       .catch((e: any) => console.log(`[upload-image put] folder create error (non-fatal): ${e?.message ?? e}`))
 
-    await vtecxnext.putcontent(imgPath)
+    // 画像アップロード用（実際のボディ、クッキーなし）
+    const reqForPut = new Request(req.url, {
+      method: 'PUT',
+      headers: { 'content-type': contentType },
+      body: bodyBuffer,
+    }) as any
+    await new VtecxNext(reqForPut).putcontent(imgPath)
 
     console.log(`[api upload-image put] end. imgPath=${imgPath}`)
     return vtecxnext.response(200, { feed: { title: 'アップロードしました。' } })
