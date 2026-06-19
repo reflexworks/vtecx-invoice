@@ -4,7 +4,7 @@ type constant_props = {
 }
 
 const constant: constant_props = {
-  app_name: '請求書アプリ',
+  app_name: 'vtecx請求書',
   check_password_comment: '半角英字・半角数字・記号をすべて含む8文字以上'
 }
 

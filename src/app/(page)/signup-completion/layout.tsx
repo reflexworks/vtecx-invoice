@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '会員登録完了 | 請求書アプリ'
+  title: '会員登録完了 | vtecx請求書'
 }
 
 const MainLayout = ({ children }: any) => {

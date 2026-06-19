@@ -18,7 +18,6 @@ import PeopleIcon from '@mui/icons-material/People'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DescriptionIcon from '@mui/icons-material/Description'
 import LogoutIcon from '@mui/icons-material/Logout'
-import BuildIcon from '@mui/icons-material/Build'
 import GroupsIcon from '@mui/icons-material/Groups'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import ContactsIcon from '@mui/icons-material/Contacts'
@@ -49,8 +48,6 @@ function SidebarContent({ children }: Props) {
   })()
   const uid = pathUid ?? contextUid
 
-  const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-
   const navItems = [
     ...(uid ? [
       { text: '見積書一覧', icon: <DescriptionIcon />, path: `/${uid}/quotation` },
@@ -60,7 +57,6 @@ function SidebarContent({ children }: Props) {
     ] : []),
     { text: 'アカウント管理', icon: <PeopleIcon />, path: isAdmin === false && accountEditId ? `/account/edit/${accountEditId}` : '/account' },
     { text: '所属グループ一覧', icon: <GroupsIcon />, path: '/account/group' },
-    ...(isLocalhost && uid ? [{ text: 'データ移行パッチ', icon: <BuildIcon />, path: `/${uid}/migrate` }] : []),
   ]
 
   const handleLogout = async () => {

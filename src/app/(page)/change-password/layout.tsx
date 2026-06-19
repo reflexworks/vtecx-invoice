@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'パスワード変更 | 請求書アプリ'
+  title: 'パスワード変更 | vtecx請求書'
 }
 
 const MainLayout = ({ children }: any) => {
