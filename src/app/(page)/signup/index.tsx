@@ -132,6 +132,7 @@ const Main = () => {
           <Grid size={{ xs: 12, md: 5 }}>
             <TextField
               name="new_password"
+              label="パスワード"
               size="small"
               slotProps={{
                 inputLabel: {
@@ -170,6 +171,7 @@ const Main = () => {
           <Grid size={{ xs: 12, md: 5 }}>
             <TextField
               name="re_new_password"
+              label="パスワード再入力"
               size="small"
               slotProps={{
                 inputLabel: {
@@ -214,7 +216,6 @@ const Main = () => {
             <Typography variant="caption" color="text.secondary">
               This site is protected by reCAPTCHA.
             </Typography>
-
           </Grid>
           <Grid size={{ xs: 12, md: 5 }} textAlign={'center'}>
             <Link href={'/login'}>
