@@ -347,49 +347,6 @@ export default function AccountEdit() {
     }
   }
 
-  const handleImageDelete = async (type: 'logo' | 'stamp') => {
-    const res = await fetch(`/api/upload-image?uid=${encodeURIComponent(uid)}&type=${type}`, {
-      method: 'DELETE',
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    if (!res.ok) {
-      const json = await res.json()
-      setSnackbar({
-        open: true,
-        message: json?.feed?.title ?? '削除に失敗しました',
-        severity: 'error'
-      })
-    } else {
-      setSnackbar({
-        open: true,
-        message: `${type === 'logo' ? 'ロゴ' : '角印'}を削除しました`,
-        severity: 'success'
-      })
-    }
-  }
-
-  const handleImageUpload = async (file: File, type: 'logo' | 'stamp') => {
-    const res = await fetch(`/api/upload-image?uid=${encodeURIComponent(uid)}&type=${type}`, {
-      method: 'PUT',
-      headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': file.type },
-      body: file
-    })
-    if (!res.ok) {
-      const json = await res.json()
-      setSnackbar({
-        open: true,
-        message: json?.feed?.title ?? 'アップロードに失敗しました',
-        severity: 'error'
-      })
-    } else {
-      setSnackbar({
-        open: true,
-        message: `${type === 'logo' ? 'ロゴ' : '角印'}をアップロードしました`,
-        severity: 'success'
-      })
-    }
-  }
-
   const handleChangePassword = async () => {
     if (!newPassword || !confirmPassword) {
       setSnackbar({ open: true, message: 'すべての項目を入力してください', severity: 'error' })
@@ -525,11 +482,6 @@ export default function AccountEdit() {
           setCompany={setCompany}
           companyNameError={errors.company_name}
           telError={errors.tel}
-          imageUid={uid}
-          onLogoUpload={(file) => handleImageUpload(file, 'logo')}
-          onStampUpload={(file) => handleImageUpload(file, 'stamp')}
-          onLogoDelete={() => handleImageDelete('logo')}
-          onStampDelete={() => handleImageDelete('stamp')}
           defaultBankLabel={defaultBankLabel}
           defaultBank={defaultBank}
           onGoBankList={() => router.push(`/${uid}/bank`)}

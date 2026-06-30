@@ -56,8 +56,6 @@ export default function AccountNew() {
   const [auth, setAuth] = useState<AuthForm>({ email: '', password: '', rePassword: '' })
   const [userName, setUserName] = useState('')
   const [company, setCompany] = useState<VtecxApp.Company>(EMPTY_COMPANY)
-  const [bank, setBank] = useState<VtecxApp.Bank>({ bank_type: '1' })
-  const [bankCode, setBankCode] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [groupAction, setGroupAction] = useState<GroupAction>('skip')
@@ -139,7 +137,7 @@ export default function AccountNew() {
       const reCaptchaToken = await executeRecaptcha('adduser')
       if (!reCaptchaToken) throw new Error('reCAPTCHA トークンの生成に失敗しました')
       const result = await postAccount(
-        { company: { ...company, email: auth.email }, bank, user: { user_name: userName.trim() } },
+        { company: { ...company, email: auth.email }, user: { user_name: userName.trim() } },
         reCaptchaToken,
         auth.password,
         groupAction,
@@ -255,11 +253,7 @@ export default function AccountNew() {
           setCompany={setCompany}
           companyNameError={errors.company_name}
           telError={errors.tel}
-          bank={bank}
-          setBank={setBank}
-          bankCode={bankCode}
-          setBankCode={setBankCode}
-          hideCompanyBank={groupAction === 'skip' || groupAction === 'join'}
+          hideCompanyBank={true}
           afterAccountInfo={
             <>
               {/* グループ設定 */}
