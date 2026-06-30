@@ -69,6 +69,7 @@ export const editPostData = (data: any[], invoice_code: string, company_code: st
       record_code: rec.record_code || `REC-${String(index + 1).padStart(2, '0')}`,
       description: rec.description,
       quantity: Number(rec.quantity),
+      unit: rec.unit,
       unit_price: Number(rec.unit_price),
       tax_rate: rec.tax_rate != null ? Number(rec.tax_rate) : 10
     }))

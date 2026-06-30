@@ -61,6 +61,7 @@ export const GET = async (req: NextRequest, { params }: DynamicRoutingParam): Pr
       records: (entry.record ?? []).map((r: any) => ({
         description: r.description ?? '',
         quantity: r.quantity ?? 0,
+        unit: r.unit ?? '',
         unit_price: r.unit_price ?? 0,
         tax_rate: r.tax_rate ?? 10
       })),
@@ -141,6 +142,7 @@ export const POST = async (req: NextRequest, { params }: DynamicRoutingParam): P
       records: (entry.record ?? []).map((r: any) => ({
         description: r.description ?? '',
         quantity: r.quantity ?? 0,
+        unit: r.unit ?? '',
         unit_price: r.unit_price ?? 0,
         tax_rate: r.tax_rate ?? 10
       })),

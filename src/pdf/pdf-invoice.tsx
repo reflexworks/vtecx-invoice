@@ -79,6 +79,7 @@ const LAYOUT = {
 type InvoiceRecord = {
   description?: string
   quantity?: number
+  unit?: string
   unit_price?: number
   tax_rate?: number
 }
@@ -195,6 +196,9 @@ const renderTableHeader = () => (
       <div style={{ ...css_text_font(9, 1, false, false, true), color: '#FFFFFF' }}>数量</div>
     </td>
     <td style={td('LRTB', 'center', HEADER_H, HEADER_COLOR)}>
+      <div style={{ ...css_text_font(9, 1, false, false, true), color: '#FFFFFF' }}>単位</div>
+    </td>
+    <td style={td('LRTB', 'center', HEADER_H, HEADER_COLOR)}>
       <div style={{ ...css_text_font(8, 1, false, false, true), color: '#FFFFFF' }}>単価(税抜)</div>
     </td>
     <td style={td('LRTB', 'center', HEADER_H, HEADER_COLOR)}>
@@ -227,6 +231,9 @@ const renderRecordRows = (records: InvoiceRecord[], startIndex: number) =>
         <td style={td('LRTB', 'right', rowH)}>
           <div style={css_text_font(9)}>{addFigure(String(r.quantity ?? 0))}</div>
         </td>
+        <td style={td('LRTB', 'center', rowH)}>
+          <div style={css_text_font(9)}>{r.unit ?? ''}</div>
+        </td>
         <td style={td('LRTB', 'right', rowH)}>
           <div style={css_text_font(9)}>{addFigure(String(r.unit_price ?? 0))}</div>
         </td>
@@ -257,6 +264,9 @@ const renderEmptyRows = (count: number, showNextPageNote: boolean = false) =>
           )}
         </td>
         <td style={td('LRTB', 'right', ROW_H)}>
+          <div style={css_text_font(9)}> </div>
+        </td>
+        <td style={td('LRTB', 'center', ROW_H)}>
           <div style={css_text_font(9)}> </div>
         </td>
         <td style={td('LRTB', 'right', ROW_H)}>
@@ -652,8 +662,8 @@ const getFirstPage = (
             border: '0.5',
             bordercolor: '#000000',
             width: '550',
-            widths: '5,40,9,21,7,18',
-            cols: '6',
+            widths: '5,37,9,8,18,7,16',
+            cols: '7',
             align: 'center'
           } as any
         }
@@ -709,8 +719,8 @@ const getContinuationPage = (
             border: '0.5',
             bordercolor: '#000000',
             width: '550',
-            widths: '5,40,9,21,7,18',
-            cols: '6',
+            widths: '5,37,9,8,18,7,16',
+            cols: '7',
             align: 'center'
           } as any
         }

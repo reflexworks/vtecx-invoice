@@ -66,6 +66,7 @@ export default function InvoiceEdit() {
                 record_code: r.record_code ?? '',
                 description: r.description ?? '',
                 quantity: r.quantity ?? 0,
+                unit: r.unit ?? '',
                 unit_price: r.unit_price ?? 0,
                 tax_rate: r.tax_rate != null ? r.tax_rate : 0
               }))

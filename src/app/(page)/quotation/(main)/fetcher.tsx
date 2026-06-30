@@ -120,6 +120,7 @@ const useQuotation = ({ companyId }: { companyId?: string }) => {
           record_code: r.record_code,
           description: r.description,
           quantity: r.quantity,
+          unit: r.unit,
           unit_price: r.unit_price,
           tax_rate: r.tax_rate
         }))

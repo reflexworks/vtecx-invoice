@@ -24,7 +24,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  Autocomplete
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import AddIcon from '@mui/icons-material/Add'
@@ -75,6 +76,8 @@ type InvoiceData = {
 type BankFormData = Omit<VtecxApp.Bank, 'due_date'> & {
   due_date: Date | null
 }
+
+const UNIT_OPTIONS = ['式', '個', '台', '本', '枚', '冊', 'セット', '時間', '日', 'ヶ月']
 
 const DEFAULT_RECORD: RecordItem = {
   record_code: 'REC-01',
@@ -225,6 +228,8 @@ export default function InvoiceForm({
       }
       setData(normalized)
       setIsDirty(false)
+      // 請求書の bank_code に合わせてセレクトを同期（マスタ取得より先に initialData が来た場合のズレを防ぐ）
+      setSelectedBankMasterCode((initialData.bank as any)?.bank_code || '')
     } else {
       setData((prev) => ({
         ...prev,
@@ -905,12 +910,22 @@ export default function InvoiceForm({
                         />
                       </TableCell>
                       <TableCell>
-                        <TextField
-                          variant="standard"
-                          value={item.unit ?? ''}
-                          onChange={(e) => handleRecordChange(index, 'unit', e.target.value)}
-                          inputProps={{ style: { textAlign: 'center' } }}
+                        <Autocomplete
+                          freeSolo
+                          options={UNIT_OPTIONS}
+                          inputValue={item.unit ?? ''}
+                          onInputChange={(_, newValue, reason) => { if (reason === 'reset') return; handleRecordChange(index, 'unit', newValue) }}
+                          onChange={(_, newValue) => { if (typeof newValue === 'string') handleRecordChange(index, 'unit', newValue) }}
                           disabled={readOnly}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              slotProps={{
+                                htmlInput: { ...params.inputProps, style: { textAlign: 'center', fontSize: 13 } }
+                              }}
+                            />
+                          )}
                         />
                       </TableCell>
                       <TableCell>

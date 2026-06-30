@@ -780,8 +780,9 @@ export default function QuotationForm({
                           <Autocomplete
                             freeSolo
                             options={UNIT_OPTIONS}
-                            value={item.unit}
+                            inputValue={item.unit ?? ''}
                             onInputChange={(_, newValue, reason) => { if (reason === 'reset') return; handleRecordChange(index, 'unit', newValue) }}
+                            onChange={(_, newValue) => { if (typeof newValue === 'string') handleRecordChange(index, 'unit', newValue) }}
                             disabled={readOnly}
                             renderInput={(params) => (
                               <TextField
