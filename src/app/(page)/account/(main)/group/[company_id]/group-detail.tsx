@@ -179,30 +179,46 @@ export default function GroupDetail() {
   const [companyEditOpen, setCompanyEditOpen] = useState(false)
   const [editCompanyName, setEditCompanyName] = useState('')
   const [editCompany, setEditCompany] = useState<VtecxApp.Company>(EMPTY_COMPANY)
-  const [editBank, setEditBank] = useState<VtecxApp.Bank>(EMPTY_BANK)
-  const [editBankCode, setEditBankCode] = useState('')
+
   const [savingCompany, setSavingCompany] = useState(false)
 
   // 画像アップロード
-  const [logoTimestamp, setLogoTimestamp] = useState(Date.now())
-  const [stampTimestamp, setStampTimestamp] = useState(Date.now())
+  const [logoSrc, setLogoSrc] = useState<string | null>(null)
+  const [stampSrc, setStampSrc] = useState<string | null>(null)
   const [logoUploading, setLogoUploading] = useState(false)
   const [stampUploading, setStampUploading] = useState(false)
   const [logoDeleting, setLogoDeleting] = useState(false)
   const [stampDeleting, setStampDeleting] = useState(false)
-  const [logoDeleted, setLogoDeleted] = useState(false)
-  const [stampDeleted, setStampDeleted] = useState(false)
   const logoInputRef = useRef<HTMLInputElement>(null)
   const stampInputRef = useRef<HTMLInputElement>(null)
 
-  const logoSrc = !logoDeleted
-    ? `/api/upload-image?uid=${encodeURIComponent(company_id)}&type=logo&t=${logoTimestamp}`
-    : null
-  const stampSrc = !stampDeleted
-    ? `/api/upload-image?uid=${encodeURIComponent(company_id)}&type=stamp&t=${stampTimestamp}`
-    : null
+  // 初期ロード時に画像の存在確認
+  useEffect(() => {
+    let cancelled = false
+    const logoUrl = `/api/upload-image?uid=${encodeURIComponent(company_id)}&type=logo`
+    const logoImg = new Image()
+    logoImg.onload = () => { if (!cancelled) setLogoSrc(logoUrl) }
+    logoImg.onerror = () => { if (!cancelled) setLogoSrc(null) }
+    logoImg.src = logoUrl
+
+    const stampUrl = `/api/upload-image?uid=${encodeURIComponent(company_id)}&type=stamp`
+    const stampImg = new Image()
+    stampImg.onload = () => { if (!cancelled) setStampSrc(stampUrl) }
+    stampImg.onerror = () => { if (!cancelled) setStampSrc(null) }
+    stampImg.src = stampUrl
+
+    return () => { cancelled = true }
+  }, [company_id])
 
   const handleImageUpload = async (file: File, type: 'logo' | 'stamp') => {
+    // ファイル選択直後にローカルプレビューを表示
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (type === 'logo') setLogoSrc(reader.result as string)
+      else setStampSrc(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+
     const res = await fetch(
       `/api/upload-image?uid=${encodeURIComponent(company_id)}&type=${type}`,
       {
@@ -219,13 +235,6 @@ export default function GroupDetail() {
         severity: 'error'
       })
     } else {
-      if (type === 'logo') {
-        setLogoTimestamp(Date.now())
-        setLogoDeleted(false)
-      } else {
-        setStampTimestamp(Date.now())
-        setStampDeleted(false)
-      }
       setSnackbar({
         open: true,
         message: `${type === 'logo' ? 'ロゴ' : '角印'}をアップロードしました`,
@@ -247,8 +256,8 @@ export default function GroupDetail() {
         severity: 'error'
       })
     } else {
-      if (type === 'logo') setLogoDeleted(true)
-      else setStampDeleted(true)
+      if (type === 'logo') setLogoSrc(null)
+      else setStampSrc(null)
       setSnackbar({
         open: true,
         message: `${type === 'logo' ? 'ロゴ' : '角印'}を削除しました`,
@@ -467,15 +476,12 @@ export default function GroupDetail() {
   const openCompanyEdit = () => {
     setEditCompanyName(group?.company_name ?? '')
     setEditCompany({ ...EMPTY_COMPANY, ...(group?.company ?? {}) })
-    const b = group?.bank ?? {}
-    setEditBank({ ...EMPTY_BANK, ...b })
-    setEditBankCode(b.bank_code ?? '')
     setCompanyEditOpen(true)
   }
 
   const handleSaveCompany = async () => {
     setSavingCompany(true)
-    const res = await updateGroupCompany(company_id, editCompanyName, editCompany, editBank)
+    const res = await updateGroupCompany(company_id, editCompanyName, editCompany)
     setSavingCompany(false)
     if (res && 'error' in (res as any)) {
       setSnackbar({
@@ -488,7 +494,7 @@ export default function GroupDetail() {
       setCompanyEditOpen(false)
       setGroup((prev) =>
         prev
-          ? { ...prev, company_name: editCompanyName, company: editCompany, bank: editBank }
+          ? { ...prev, company_name: editCompanyName, company: editCompany }
           : prev
       )
     }
@@ -899,7 +905,12 @@ export default function GroupDetail() {
                       {bankList
                         .slice((bankPage - 1) * BANK_PAGE_SIZE, bankPage * BANK_PAGE_SIZE)
                         .map((bank) => (
-                          <TableRow key={bank.bank_code} hover>
+                          <TableRow
+                            key={bank.bank_code}
+                            hover
+                            onClick={() => canEditBank && openBankEdit(bank)}
+                            sx={{ cursor: canEditBank ? 'pointer' : 'default' }}
+                          >
                             <TableCell>{bank.bank_label || '—'}</TableCell>
                             <TableCell>{bank.bank_title || '—'}</TableCell>
                             <TableCell>{bank.branch_name || '—'}</TableCell>
@@ -916,16 +927,7 @@ export default function GroupDetail() {
                               )}
                             </TableCell>
                             {canEditBank && (
-                              <TableCell align="right">
-                                <Tooltip title="編集">
-                                  <IconButton
-                                    size="small"
-                                    color="primary"
-                                    onClick={() => openBankEdit(bank)}
-                                  >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                </Tooltip>
+                              <TableCell align="right" onClick={(e) => e.stopPropagation()}>
                                 <Tooltip title="削除">
                                   <IconButton
                                     size="small"
@@ -1060,12 +1062,27 @@ export default function GroupDetail() {
             <Dialog open={!!bankDeleteTarget} onClose={() => setBankDeleteTarget(null)}>
               <DialogTitle>口座情報を削除</DialogTitle>
               <DialogContent>
-                <Typography>
-                  <strong>
-                    {bankDeleteTarget?.bank_label || bankDeleteTarget?.bank_title || '口座'}
-                  </strong>{' '}
-                  を削除しますか？
+                <Typography sx={{ mb: 2 }}>
+                  以下の口座情報を削除しますか？
                 </Typography>
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '4px 16px', alignItems: 'baseline' }}>
+                  {bankDeleteTarget?.bank_label && (
+                    <>
+                      <Typography variant="body2" color="text.secondary">ラベル</Typography>
+                      <Typography variant="body2"><strong>{bankDeleteTarget.bank_label}</strong></Typography>
+                    </>
+                  )}
+                  <Typography variant="body2" color="text.secondary">銀行名</Typography>
+                  <Typography variant="body2">{bankDeleteTarget?.bank_title || '—'}</Typography>
+                  <Typography variant="body2" color="text.secondary">支店名</Typography>
+                  <Typography variant="body2">{bankDeleteTarget?.branch_name || '—'}</Typography>
+                  <Typography variant="body2" color="text.secondary">口座種別</Typography>
+                  <Typography variant="body2">{bankDeleteTarget?.bank_type === '2' ? '当座' : '普通'}</Typography>
+                  <Typography variant="body2" color="text.secondary">口座番号</Typography>
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{bankDeleteTarget?.bank_number || '—'}</Typography>
+                  <Typography variant="body2" color="text.secondary">口座名義</Typography>
+                  <Typography variant="body2">{bankDeleteTarget?.bank_name || '—'}</Typography>
+                </Box>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setBankDeleteTarget(null)} disabled={deletingBank}>
@@ -1309,99 +1326,6 @@ export default function GroupDetail() {
               </Box>
               <CompanyForm company={editCompany} setCompany={setEditCompany} />
 
-              {/* 口座情報 */}
-              <Box sx={{ bgcolor: '#d1e9ff', p: 0.5, px: 2, mb: 2, mt: 3 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                  口座情報
-                </Typography>
-              </Box>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <Autocomplete
-                    options={getBankList()}
-                    getOptionLabel={(option) => `${option.name} (${option.code})`}
-                    value={getBankList().find((b) => b.name === editBank.bank_title) ?? null}
-                    onChange={(_, newValue) => {
-                      setEditBank((prev) => ({
-                        ...prev,
-                        bank_title: newValue?.name ?? '',
-                        bank_code: newValue?.code ?? '',
-                        branch_name: '',
-                        branch_code: ''
-                      }))
-                      setEditBankCode(newValue?.code ?? '')
-                    }}
-                    renderInput={(params) => <TextField {...params} label="銀行名" />}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Autocomplete
-                    options={editBankCode ? getBranchList(editBankCode) : []}
-                    getOptionLabel={(option) => `${option.name} (${option.code})`}
-                    value={
-                      editBankCode
-                        ? (getBranchList(editBankCode).find(
-                            (b) => b.name === editBank.branch_name
-                          ) ?? null)
-                        : null
-                    }
-                    disabled={!editBankCode}
-                    onChange={(_, newValue) => {
-                      setEditBank((prev) => ({
-                        ...prev,
-                        branch_name: newValue?.name ?? '',
-                        branch_code: newValue?.code ?? ''
-                      }))
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="支店名"
-                        placeholder={!editBankCode ? '銀行を選択してください' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <InputLabel>口座種別</InputLabel>
-                    <Select
-                      label="口座種別"
-                      value={editBank.bank_type ?? '1'}
-                      onChange={(e) =>
-                        setEditBank((prev) => ({ ...prev, bank_type: e.target.value }))
-                      }
-                    >
-                      <MenuItem value="1">普通</MenuItem>
-                      <MenuItem value="2">当座</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    label="口座番号"
-                    fullWidth
-                    value={editBank.bank_number ?? ''}
-                    onChange={(e) =>
-                      setEditBank((prev) => ({ ...prev, bank_number: e.target.value }))
-                    }
-                    slotProps={{
-                      htmlInput: { maxLength: 7, pattern: '[0-9]*', inputMode: 'numeric' }
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    label="口座名義"
-                    fullWidth
-                    placeholder="カ）バーチャルテクノロジー"
-                    value={editBank.bank_name ?? ''}
-                    onChange={(e) =>
-                      setEditBank((prev) => ({ ...prev, bank_name: e.target.value }))
-                    }
-                  />
-                </Grid>
-              </Grid>
             </Box>
           </DialogContent>
           <DialogActions>
