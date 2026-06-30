@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Typography,
@@ -53,12 +53,6 @@ type AccountFormProps = {
   setCompany: React.Dispatch<React.SetStateAction<VtecxApp.Company>>
   companyNameError?: string
   telError?: string
-  // 画像アップロード（編集時のみ）
-  imageUid?: string
-  onLogoUpload?: (file: File) => Promise<void>
-  onStampUpload?: (file: File) => Promise<void>
-  onLogoDelete?: () => Promise<void>
-  onStampDelete?: () => Promise<void>
   // 振込先情報（編集時のみ：デフォルト口座名表示 + 一覧リンク）
   defaultBankLabel?: string
   defaultBank?: VtecxApp.Bank
@@ -95,11 +89,6 @@ export function AccountForm({
   setCompany,
   companyNameError,
   telError,
-  imageUid,
-  onLogoUpload,
-  onStampUpload,
-  onLogoDelete,
-  onStampDelete,
   defaultBankLabel,
   defaultBank,
   onGoBankList,
@@ -112,59 +101,6 @@ export function AccountForm({
 }: AccountFormProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [showRePassword, setShowRePassword] = useState(false)
-  const [logoTimestamp, setLogoTimestamp] = useState(Date.now())
-  const [stampTimestamp, setStampTimestamp] = useState(Date.now())
-  const [logoUploading, setLogoUploading] = useState(false)
-  const [stampUploading, setStampUploading] = useState(false)
-  const [logoDeleting, setLogoDeleting] = useState(false)
-  const [stampDeleting, setStampDeleting] = useState(false)
-  const [logoDeleted, setLogoDeleted] = useState(false)
-  const [stampDeleted, setStampDeleted] = useState(false)
-  const logoInputRef = useRef<HTMLInputElement>(null)
-  const stampInputRef = useRef<HTMLInputElement>(null)
-
-  const logoSrc =
-    imageUid && !logoDeleted
-      ? `/api/upload-image?uid=${encodeURIComponent(imageUid)}&type=logo&t=${logoTimestamp}`
-      : null
-  const stampSrc =
-    imageUid && !stampDeleted
-      ? `/api/upload-image?uid=${encodeURIComponent(imageUid)}&type=stamp&t=${stampTimestamp}`
-      : null
-
-  const handleLogoDelete = async () => {
-    setLogoDeleting(true)
-    await onLogoDelete?.()
-    setLogoDeleting(false)
-    setLogoDeleted(true)
-  }
-
-  const handleStampDelete = async () => {
-    setStampDeleting(true)
-    await onStampDelete?.()
-    setStampDeleting(false)
-    setStampDeleted(true)
-  }
-
-  const handleImageSelect = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: 'logo' | 'stamp'
-  ) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (type === 'logo') {
-      setLogoUploading(true)
-      await onLogoUpload?.(file)
-      setLogoUploading(false)
-      setLogoTimestamp(Date.now())
-    } else {
-      setStampUploading(true)
-      await onStampUpload?.(file)
-      setStampUploading(false)
-      setStampTimestamp(Date.now())
-    }
-    e.target.value = ''
-  }
 
   return (
     <>
@@ -264,124 +200,6 @@ export function AccountForm({
             companyNameError={companyNameError}
             telError={telError}
           />
-          <Grid container spacing={3}>
-            {mode === 'edit' && (
-              <>
-                <Grid size={12}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    企業ロゴ
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Box
-                      sx={{
-                        width: 200,
-                        height: 60,
-                        border: '1px solid #e0e0e0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: '#fafafa'
-                      }}
-                    >
-                      {logoSrc ? (
-                        <img
-                          src={logoSrc}
-                          alt="ロゴ"
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                        />
-                      ) : (
-                        <Typography variant="caption" color="text.secondary">
-                          未設定
-                        </Typography>
-                      )}
-                    </Box>
-                    <input
-                      ref={logoInputRef}
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleImageSelect(e, 'logo')}
-                    />
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled={logoUploading}
-                      onClick={() => logoInputRef.current?.click()}
-                    >
-                      {logoUploading ? 'アップロード中...' : 'ファイルを選択'}
-                    </Button>
-                    {logoSrc && (
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        color="error"
-                        disabled={logoDeleting}
-                        onClick={handleLogoDelete}
-                      >
-                        {logoDeleting ? '削除中...' : '削除'}
-                      </Button>
-                    )}
-                  </Box>
-                </Grid>
-                <Grid size={12}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    角印
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Box
-                      sx={{
-                        width: 60,
-                        height: 60,
-                        border: '1px solid #e0e0e0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: '#fafafa'
-                      }}
-                    >
-                      {stampSrc ? (
-                        <img
-                          src={stampSrc}
-                          alt="角印"
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                        />
-                      ) : (
-                        <Typography variant="caption" color="text.secondary">
-                          未設定
-                        </Typography>
-                      )}
-                    </Box>
-                    <input
-                      ref={stampInputRef}
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleImageSelect(e, 'stamp')}
-                    />
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled={stampUploading}
-                      onClick={() => stampInputRef.current?.click()}
-                    >
-                      {stampUploading ? 'アップロード中...' : 'ファイルを選択'}
-                    </Button>
-                    {stampSrc && (
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        color="error"
-                        disabled={stampDeleting}
-                        onClick={handleStampDelete}
-                      >
-                        {stampDeleting ? '削除中...' : '削除'}
-                      </Button>
-                    )}
-                  </Box>
-                </Grid>
-              </>
-            )}
-          </Grid>
 
           {/* --- 振込先情報 --- */}
           <SectionHeader label="振込先情報" />
